@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Check, Phone, Cake, X } from "lucide-react";
+import { Calendar, Check, Phone, Cake, X, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
 import { EditPatientDialog } from "./EditPatientDialog";
 
@@ -30,7 +30,20 @@ export function PatientCard({ patient, onPurchaseToggle, onEditPatient }: Patien
     toast.success(`Estado de compra actualizado para ${patient.name}`);
   };
 
-  const nextPurchaseDate = new Date(patient.nextPurchaseDate);
+  const calculateNextPurchaseDate = () => {
+    const firstPurchase = new Date(patient.nextPurchaseDate);
+    const today = new Date();
+    
+    // Encontrar la próxima fecha de compra basada en la fecha inicial
+    let nextDate = new Date(firstPurchase);
+    while (nextDate < today) {
+      nextDate.setMonth(nextDate.getMonth() + 1);
+    }
+    
+    return nextDate;
+  };
+
+  const nextPurchaseDate = calculateNextPurchaseDate();
   const today = new Date();
   const daysUntilPurchase = Math.ceil(
     (nextPurchaseDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
@@ -44,6 +57,17 @@ export function PatientCard({ patient, onPurchaseToggle, onEditPatient }: Patien
       day: 'numeric'
     });
   };
+
+  // Mostrar toast de recordatorio si faltan 3 días o menos y no ha comprado
+  if (daysUntilPurchase <= 3 && daysUntilPurchase > 0 && !patient.hasPurchasedThisMonth) {
+    toast.warning(
+      `${patient.name} debe comprar sus medicamentos pronto`,
+      {
+        duration: Infinity,
+        icon: <AlertCircle className="h-4 w-4" />,
+      }
+    );
+  }
 
   return (
     <Card className="w-full">
@@ -78,14 +102,18 @@ export function PatientCard({ patient, onPurchaseToggle, onEditPatient }: Patien
           <div className="text-sm text-muted-foreground">
             <strong>Prescripción:</strong> {patient.prescription}
           </div>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Calendar className="h-4 w-4" />
+            <span>Fecha Primera Compra: {formatDate(patient.nextPurchaseDate)}</span>
+          </div>
           <div
             className={`flex items-center gap-2 text-sm ${
-              daysUntilPurchase <= 7 ? "text-red-500" : "text-muted-foreground"
+              daysUntilPurchase <= 3 ? "text-red-500" : "text-muted-foreground"
             }`}
           >
             <Calendar className="h-4 w-4" />
             <span>
-              Próxima compra:{" "}
+              Próxima compra mensual:{" "}
               {daysUntilPurchase <= 0
                 ? "Vencido"
                 : `${daysUntilPurchase} días restantes`}

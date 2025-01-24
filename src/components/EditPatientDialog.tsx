@@ -34,17 +34,23 @@ export function EditPatientDialog({ patient, onEditPatient }: EditPatientDialogP
   const [open, setOpen] = useState(false);
   const [name, setName] = useState(patient.name);
   const [prescription, setPrescription] = useState(patient.prescription);
-  const [nextPurchaseDate, setNextPurchaseDate] = useState(patient.nextPurchaseDate);
+  const [firstPurchaseDate, setFirstPurchaseDate] = useState(patient.nextPurchaseDate);
   const [phone, setPhone] = useState(patient.phone);
   const [birthday, setBirthday] = useState(patient.birthday);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !prescription || !nextPurchaseDate || !phone || !birthday) {
+    if (!name || !prescription || !firstPurchaseDate || !phone || !birthday) {
       toast.error("Por favor complete todos los campos");
       return;
     }
-    onEditPatient(patient.id, { name, prescription, nextPurchaseDate, phone, birthday });
+    onEditPatient(patient.id, { 
+      name, 
+      prescription, 
+      nextPurchaseDate: firstPurchaseDate,
+      phone, 
+      birthday 
+    });
     setOpen(false);
     toast.success("Paciente actualizado exitosamente");
   };
@@ -99,12 +105,12 @@ export function EditPatientDialog({ patient, onEditPatient }: EditPatientDialogP
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="nextPurchaseDate">Próxima Fecha de Compra</Label>
+            <Label htmlFor="firstPurchaseDate">Fecha de Primera Compra</Label>
             <Input
-              id="nextPurchaseDate"
+              id="firstPurchaseDate"
               type="date"
-              value={nextPurchaseDate}
-              onChange={(e) => setNextPurchaseDate(e.target.value)}
+              value={firstPurchaseDate}
+              onChange={(e) => setFirstPurchaseDate(e.target.value)}
             />
           </div>
           <Button type="submit">Actualizar Paciente</Button>

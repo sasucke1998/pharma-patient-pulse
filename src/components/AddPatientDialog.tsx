@@ -25,20 +25,26 @@ export function AddPatientDialog({ onAddPatient }: AddPatientDialogProps) {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [prescription, setPrescription] = useState("");
-  const [nextPurchaseDate, setNextPurchaseDate] = useState("");
+  const [firstPurchaseDate, setFirstPurchaseDate] = useState("");
   const [phone, setPhone] = useState("");
   const [birthday, setBirthday] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !prescription || !nextPurchaseDate || !phone || !birthday) {
+    if (!name || !prescription || !firstPurchaseDate || !phone || !birthday) {
       toast.error("Por favor complete todos los campos");
       return;
     }
-    onAddPatient({ name, prescription, nextPurchaseDate, phone, birthday });
+    onAddPatient({ 
+      name, 
+      prescription, 
+      nextPurchaseDate: firstPurchaseDate, // Mantenemos nextPurchaseDate por compatibilidad
+      phone, 
+      birthday 
+    });
     setName("");
     setPrescription("");
-    setNextPurchaseDate("");
+    setFirstPurchaseDate("");
     setPhone("");
     setBirthday("");
     setOpen(false);
@@ -93,12 +99,12 @@ export function AddPatientDialog({ onAddPatient }: AddPatientDialogProps) {
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="nextPurchaseDate">Próxima Fecha de Compra</Label>
+            <Label htmlFor="firstPurchaseDate">Fecha de Primera Compra</Label>
             <Input
-              id="nextPurchaseDate"
+              id="firstPurchaseDate"
               type="date"
-              value={nextPurchaseDate}
-              onChange={(e) => setNextPurchaseDate(e.target.value)}
+              value={firstPurchaseDate}
+              onChange={(e) => setFirstPurchaseDate(e.target.value)}
             />
           </div>
           <Button type="submit">Agregar Paciente</Button>
