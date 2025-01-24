@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Check, X } from "lucide-react";
+import { Calendar, Check, Phone, Cake, X } from "lucide-react";
 import { toast } from "sonner";
 
 interface PatientCardProps {
@@ -10,6 +10,8 @@ interface PatientCardProps {
     prescription: string;
     nextPurchaseDate: string;
     hasPurchasedThisMonth: boolean;
+    phone: string;
+    birthday: string;
   };
   onPurchaseToggle: (id: string) => void;
 }
@@ -25,6 +27,15 @@ export function PatientCard({ patient, onPurchaseToggle }: PatientCardProps) {
   const daysUntilPurchase = Math.ceil(
     (nextPurchaseDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
   );
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('es-ES', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
 
   return (
     <Card className="w-full">
@@ -45,6 +56,14 @@ export function PatientCard({ patient, onPurchaseToggle }: PatientCardProps) {
       </CardHeader>
       <CardContent>
         <div className="grid gap-2">
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Phone className="h-4 w-4" />
+            <span>{patient.phone}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <Cake className="h-4 w-4" />
+            <span>Cumpleaños: {formatDate(patient.birthday)}</span>
+          </div>
           <div className="text-sm text-muted-foreground">
             <strong>Prescripción:</strong> {patient.prescription}
           </div>

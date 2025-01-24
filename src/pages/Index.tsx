@@ -9,6 +9,8 @@ interface Patient {
   prescription: string;
   nextPurchaseDate: string;
   hasPurchasedThisMonth: boolean;
+  phone: string;
+  birthday: string;
 }
 
 const Index = () => {
@@ -18,6 +20,8 @@ const Index = () => {
     name: string;
     prescription: string;
     nextPurchaseDate: string;
+    phone: string;
+    birthday: string;
   }) => {
     const newPatient: Patient = {
       id: crypto.randomUUID(),

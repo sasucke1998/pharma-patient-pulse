@@ -16,6 +16,8 @@ interface AddPatientDialogProps {
     name: string;
     prescription: string;
     nextPurchaseDate: string;
+    phone: string;
+    birthday: string;
   }) => void;
 }
 
@@ -24,17 +26,21 @@ export function AddPatientDialog({ onAddPatient }: AddPatientDialogProps) {
   const [name, setName] = useState("");
   const [prescription, setPrescription] = useState("");
   const [nextPurchaseDate, setNextPurchaseDate] = useState("");
+  const [phone, setPhone] = useState("");
+  const [birthday, setBirthday] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!name || !prescription || !nextPurchaseDate) {
+    if (!name || !prescription || !nextPurchaseDate || !phone || !birthday) {
       toast.error("Por favor complete todos los campos");
       return;
     }
-    onAddPatient({ name, prescription, nextPurchaseDate });
+    onAddPatient({ name, prescription, nextPurchaseDate, phone, birthday });
     setName("");
     setPrescription("");
     setNextPurchaseDate("");
+    setPhone("");
+    setBirthday("");
     setOpen(false);
     toast.success("Paciente agregado exitosamente");
   };
@@ -56,6 +62,25 @@ export function AddPatientDialog({ onAddPatient }: AddPatientDialogProps) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ingrese el nombre del paciente"
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="phone">Teléfono</Label>
+            <Input
+              id="phone"
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Ingrese el número de teléfono"
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="birthday">Fecha de Nacimiento</Label>
+            <Input
+              id="birthday"
+              type="date"
+              value={birthday}
+              onChange={(e) => setBirthday(e.target.value)}
             />
           </div>
           <div className="grid gap-2">
