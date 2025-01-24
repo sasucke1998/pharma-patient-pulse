@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Check, Phone, Cake, X } from "lucide-react";
 import { toast } from "sonner";
+import { EditPatientDialog } from "./EditPatientDialog";
 
 interface PatientCardProps {
   patient: {
@@ -14,9 +15,16 @@ interface PatientCardProps {
     birthday: string;
   };
   onPurchaseToggle: (id: string) => void;
+  onEditPatient: (id: string, patient: {
+    name: string;
+    prescription: string;
+    nextPurchaseDate: string;
+    phone: string;
+    birthday: string;
+  }) => void;
 }
 
-export function PatientCard({ patient, onPurchaseToggle }: PatientCardProps) {
+export function PatientCard({ patient, onPurchaseToggle, onEditPatient }: PatientCardProps) {
   const handlePurchaseToggle = () => {
     onPurchaseToggle(patient.id);
     toast.success(`Estado de compra actualizado para ${patient.name}`);
@@ -41,18 +49,21 @@ export function PatientCard({ patient, onPurchaseToggle }: PatientCardProps) {
     <Card className="w-full">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-xl font-bold">{patient.name}</CardTitle>
-        <Button
-          onClick={handlePurchaseToggle}
-          variant={patient.hasPurchasedThisMonth ? "destructive" : "default"}
-          size="sm"
-        >
-          {patient.hasPurchasedThisMonth ? (
-            <X className="mr-2 h-4 w-4" />
-          ) : (
-            <Check className="mr-2 h-4 w-4" />
-          )}
-          {patient.hasPurchasedThisMonth ? "Deshacer Compra" : "Marcar Comprado"}
-        </Button>
+        <div className="flex gap-2">
+          <EditPatientDialog patient={patient} onEditPatient={onEditPatient} />
+          <Button
+            onClick={handlePurchaseToggle}
+            variant={patient.hasPurchasedThisMonth ? "destructive" : "default"}
+            size="sm"
+          >
+            {patient.hasPurchasedThisMonth ? (
+              <X className="mr-2 h-4 w-4" />
+            ) : (
+              <Check className="mr-2 h-4 w-4" />
+            )}
+            {patient.hasPurchasedThisMonth ? "Deshacer Compra" : "Marcar Comprado"}
+          </Button>
+        </div>
       </CardHeader>
       <CardContent>
         <div className="grid gap-2">

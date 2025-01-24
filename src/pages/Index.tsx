@@ -41,6 +41,22 @@ const Index = () => {
     );
   };
 
+  const handleEditPatient = (patientId: string, updatedData: {
+    name: string;
+    prescription: string;
+    nextPurchaseDate: string;
+    phone: string;
+    birthday: string;
+  }) => {
+    setPatients((prev) =>
+      prev.map((patient) =>
+        patient.id === patientId
+          ? { ...patient, ...updatedData }
+          : patient
+      )
+    );
+  };
+
   const purchasedThisMonth = patients.filter(
     (patient) => patient.hasPurchasedThisMonth
   ).length;
@@ -65,6 +81,7 @@ const Index = () => {
             key={patient.id}
             patient={patient}
             onPurchaseToggle={handlePurchaseToggle}
+            onEditPatient={handleEditPatient}
           />
         ))}
       </div>
