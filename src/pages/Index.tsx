@@ -43,7 +43,7 @@ const Index = () => {
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">Pharmacy Management System</h1>
+      <h1 className="text-3xl font-bold mb-8">Sistema de Gestión de Farmacia</h1>
       
       <DashboardStats
         totalPatients={patients.length}

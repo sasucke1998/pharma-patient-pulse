@@ -17,7 +17,7 @@ interface PatientCardProps {
 export function PatientCard({ patient, onPurchaseToggle }: PatientCardProps) {
   const handlePurchaseToggle = () => {
     onPurchaseToggle(patient.id);
-    toast.success(`Purchase status updated for ${patient.name}`);
+    toast.success(`Estado de compra actualizado para ${patient.name}`);
   };
 
   const nextPurchaseDate = new Date(patient.nextPurchaseDate);
@@ -40,13 +40,13 @@ export function PatientCard({ patient, onPurchaseToggle }: PatientCardProps) {
           ) : (
             <Check className="mr-2 h-4 w-4" />
           )}
-          {patient.hasPurchasedThisMonth ? "Undo Purchase" : "Mark Purchased"}
+          {patient.hasPurchasedThisMonth ? "Deshacer Compra" : "Marcar Comprado"}
         </Button>
       </CardHeader>
       <CardContent>
         <div className="grid gap-2">
           <div className="text-sm text-muted-foreground">
-            <strong>Prescription:</strong> {patient.prescription}
+            <strong>Prescripción:</strong> {patient.prescription}
           </div>
           <div
             className={`flex items-center gap-2 text-sm ${
@@ -55,10 +55,10 @@ export function PatientCard({ patient, onPurchaseToggle }: PatientCardProps) {
           >
             <Calendar className="h-4 w-4" />
             <span>
-              Next purchase:{" "}
+              Próxima compra:{" "}
               {daysUntilPurchase <= 0
-                ? "Overdue"
-                : `${daysUntilPurchase} days remaining`}
+                ? "Vencido"
+                : `${daysUntilPurchase} días restantes`}
             </span>
           </div>
         </div>

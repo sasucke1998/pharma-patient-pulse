@@ -16,7 +16,7 @@ export function DashboardStats({
     <div className="grid gap-4 md:grid-cols-3">
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Patients</CardTitle>
+          <CardTitle className="text-sm font-medium">Total de Pacientes</CardTitle>
           <Users className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
@@ -26,7 +26,7 @@ export function DashboardStats({
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">
-            Purchased This Month
+            Compras Este Mes
           </CardTitle>
           <ShoppingCart className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
@@ -36,7 +36,7 @@ export function DashboardStats({
       </Card>
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Pending Purchases</CardTitle>
+          <CardTitle className="text-sm font-medium">Compras Pendientes</CardTitle>
           <AlertCircle className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>

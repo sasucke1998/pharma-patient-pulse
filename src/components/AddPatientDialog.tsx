@@ -28,7 +28,7 @@ export function AddPatientDialog({ onAddPatient }: AddPatientDialogProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !prescription || !nextPurchaseDate) {
-      toast.error("Please fill in all fields");
+      toast.error("Por favor complete todos los campos");
       return;
     }
     onAddPatient({ name, prescription, nextPurchaseDate });
@@ -36,39 +36,39 @@ export function AddPatientDialog({ onAddPatient }: AddPatientDialogProps) {
     setPrescription("");
     setNextPurchaseDate("");
     setOpen(false);
-    toast.success("Patient added successfully");
+    toast.success("Paciente agregado exitosamente");
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="w-full">Add New Patient</Button>
+        <Button className="w-full">Agregar Nuevo Paciente</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add New Patient</DialogTitle>
+          <DialogTitle>Agregar Nuevo Paciente</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="name">Patient Name</Label>
+            <Label htmlFor="name">Nombre del Paciente</Label>
             <Input
               id="name"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Enter patient name"
+              placeholder="Ingrese el nombre del paciente"
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="prescription">Prescription</Label>
+            <Label htmlFor="prescription">Prescripción</Label>
             <Input
               id="prescription"
               value={prescription}
               onChange={(e) => setPrescription(e.target.value)}
-              placeholder="Enter prescription details"
+              placeholder="Ingrese detalles de la prescripción"
             />
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="nextPurchaseDate">Next Purchase Date</Label>
+            <Label htmlFor="nextPurchaseDate">Próxima Fecha de Compra</Label>
             <Input
               id="nextPurchaseDate"
               type="date"
@@ -76,7 +76,7 @@ export function AddPatientDialog({ onAddPatient }: AddPatientDialogProps) {
               onChange={(e) => setNextPurchaseDate(e.target.value)}
             />
           </div>
-          <Button type="submit">Add Patient</Button>
+          <Button type="submit">Agregar Paciente</Button>
         </form>
       </DialogContent>
     </Dialog>
