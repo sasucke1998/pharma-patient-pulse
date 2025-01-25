@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus, CheckCircle, Clock } from "lucide-react";
+import { Plus, CheckCircle, Clock, Trash2, PenTool } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { AddTaskDialog } from "./AddTaskDialog";
 import { format } from "date-fns";
@@ -19,6 +19,7 @@ export function SupervisorTasks() {
     return savedTasks ? JSON.parse(savedTasks) : [];
   });
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
   const { toast } = useToast();
 
   // Efecto para guardar tareas en localStorage
@@ -48,22 +49,15 @@ export function SupervisorTasks() {
   // Efecto para notificaciones de tareas
   useEffect(() => {
     const checkTasks = () => {
+      const now = new Date();
+      const currentTime = format(now, 'HH:mm');
+
       tasks.forEach(task => {
-        if (!task.completed) {
-          const [hours, minutes] = task.time.split(":");
-          const taskTime = new Date();
-          taskTime.setHours(parseInt(hours), parseInt(minutes), 0);
-          
-          const now = new Date();
-          const timeDiff = taskTime.getTime() - now.getTime();
-          
-          // Notificar 5 minutos antes
-          if (timeDiff > 0 && timeDiff <= 1000 * 60 * 5) {
-            toast({
-              title: "¡Tarea Próxima!",
-              description: `La tarea "${task.title}" debe realizarse a las ${task.time}`,
-            });
-          }
+        if (!task.completed && task.time === currentTime) {
+          toast({
+            title: "¡Tarea Pendiente!",
+            description: `Es hora de realizar la tarea: "${task.title}"`,
+          });
         }
       });
     };
@@ -80,6 +74,29 @@ export function SupervisorTasks() {
     };
     setTasks(prev => [...prev, task]);
     setIsAddTaskOpen(false);
+  };
+
+  const handleEditTask = (taskToEdit: Task) => {
+    setEditingTask(taskToEdit);
+    setIsAddTaskOpen(true);
+  };
+
+  const handleUpdateTask = (updatedTask: Omit<Task, "id" | "completed">) => {
+    if (editingTask) {
+      setTasks(prev =>
+        prev.map(task =>
+          task.id === editingTask.id
+            ? { ...task, ...updatedTask }
+            : task
+        )
+      );
+      setEditingTask(null);
+      setIsAddTaskOpen(false);
+    }
+  };
+
+  const handleDeleteTask = (taskId: string) => {
+    setTasks(prev => prev.filter(task => task.id !== taskId));
   };
 
   const toggleTaskCompletion = (taskId: string) => {
@@ -131,6 +148,22 @@ export function SupervisorTasks() {
                   </div>
                 </div>
               </div>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleEditTask(task)}
+                >
+                  <PenTool className="h-4 w-4 text-blue-500" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => handleDeleteTask(task.id)}
+                >
+                  <Trash2 className="h-4 w-4 text-red-500" />
+                </Button>
+              </div>
             </div>
           ))}
           {tasks.length === 0 && (
@@ -141,7 +174,8 @@ export function SupervisorTasks() {
       <AddTaskDialog
         open={isAddTaskOpen}
         onOpenChange={setIsAddTaskOpen}
-        onAddTask={handleAddTask}
+        onAddTask={editingTask ? handleUpdateTask : handleAddTask}
+        editingTask={editingTask}
       />
     </Card>
   );

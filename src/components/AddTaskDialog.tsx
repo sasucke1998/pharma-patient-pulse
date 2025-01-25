@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,15 +9,33 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+interface Task {
+  id: string;
+  title: string;
+  time: string;
+  completed: boolean;
+}
+
 interface AddTaskDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onAddTask: (task: { title: string; time: string }) => void;
+  editingTask?: Task | null;
 }
 
-export function AddTaskDialog({ open, onOpenChange, onAddTask }: AddTaskDialogProps) {
+export function AddTaskDialog({ open, onOpenChange, onAddTask, editingTask }: AddTaskDialogProps) {
   const [title, setTitle] = useState("");
   const [time, setTime] = useState("");
+
+  useEffect(() => {
+    if (editingTask) {
+      setTitle(editingTask.title);
+      setTime(editingTask.time);
+    } else {
+      setTitle("");
+      setTime("");
+    }
+  }, [editingTask]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +50,7 @@ export function AddTaskDialog({ open, onOpenChange, onAddTask }: AddTaskDialogPr
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Agregar Nueva Tarea</DialogTitle>
+          <DialogTitle>{editingTask ? "Editar Tarea" : "Agregar Nueva Tarea"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
@@ -63,7 +81,9 @@ export function AddTaskDialog({ open, onOpenChange, onAddTask }: AddTaskDialogPr
             >
               Cancelar
             </Button>
-            <Button type="submit">Agregar Tarea</Button>
+            <Button type="submit">
+              {editingTask ? "Actualizar" : "Agregar"}
+            </Button>
           </div>
         </form>
       </DialogContent>
