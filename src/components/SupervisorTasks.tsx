@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Plus, CheckCircle, Clock, Trash2, PenTool } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { AddTaskDialog } from "./AddTaskDialog";
-import { format } from "date-fns";
+import { format, addMinutes, isBefore, isAfter, parseISO } from "date-fns";
 
 interface Task {
   id: string;
@@ -21,6 +21,7 @@ export function SupervisorTasks() {
   const [isAddTaskOpen, setIsAddTaskOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
   const { toast } = useToast();
+  const [notifiedTasks, setNotifiedTasks] = useState<Set<string>>(new Set());
 
   // Efecto para guardar tareas en localStorage
   useEffect(() => {
@@ -37,6 +38,7 @@ export function SupervisorTasks() {
         setTasks(prevTasks => 
           prevTasks.map(task => ({ ...task, completed: false }))
         );
+        setNotifiedTasks(new Set()); // Reset notified tasks
         localStorage.setItem("lastTaskReset", today);
       }
     };
@@ -50,21 +52,47 @@ export function SupervisorTasks() {
   useEffect(() => {
     const checkTasks = () => {
       const now = new Date();
-      const currentTime = format(now, 'HH:mm');
-
+      
       tasks.forEach(task => {
-        if (!task.completed && task.time === currentTime) {
+        if (task.completed) return;
+
+        const [hours, minutes] = task.time.split(':').map(Number);
+        const taskTime = new Date();
+        taskTime.setHours(hours, minutes, 0, 0);
+        
+        const thirtyMinutesBefore = addMinutes(taskTime, -30);
+        
+        // Si estamos después de 30 minutos antes de la tarea y antes de la hora de la tarea
+        if (isAfter(now, thirtyMinutesBefore) && isBefore(now, taskTime) && !notifiedTasks.has(`${task.id}-pre`)) {
+          toast({
+            title: "¡Tarea Próxima!",
+            description: `En 30 minutos debes realizar la tarea: "${task.title}"`,
+            duration: 10000, // 10 segundos
+          });
+          setNotifiedTasks(prev => new Set(prev).add(`${task.id}-pre`));
+        }
+        
+        // Si ya pasó la hora de la tarea y no está completada
+        if (isAfter(now, taskTime) && !task.completed) {
           toast({
             title: "¡Tarea Pendiente!",
             description: `Es hora de realizar la tarea: "${task.title}"`,
+            duration: 10000, // 10 segundos
           });
+          
+          // Programar recordatorios cada 5 minutos
+          if (!notifiedTasks.has(`${task.id}-${now.getMinutes()}`)) {
+            setNotifiedTasks(prev => new Set(prev).add(`${task.id}-${now.getMinutes()}`));
+          }
         }
       });
     };
 
     const interval = setInterval(checkTasks, 1000 * 60); // Revisar cada minuto
+    checkTasks(); // Ejecutar inmediatamente al montar
+    
     return () => clearInterval(interval);
-  }, [tasks, toast]);
+  }, [tasks, toast, notifiedTasks]);
 
   const handleAddTask = (newTask: Omit<Task, "id" | "completed">) => {
     const task: Task = {
