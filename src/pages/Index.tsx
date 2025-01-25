@@ -2,6 +2,7 @@ import { useState } from "react";
 import { AddPatientDialog } from "@/components/AddPatientDialog";
 import { PatientCard } from "@/components/PatientCard";
 import { DashboardStats } from "@/components/Dashboard";
+import { SupervisorTasks } from "@/components/SupervisorTasks";
 
 interface Patient {
   id: string;
@@ -70,6 +71,8 @@ const Index = () => {
         purchasedThisMonth={purchasedThisMonth}
         pendingPurchases={patients.length - purchasedThisMonth}
       />
+
+      <SupervisorTasks />
 
       <div className="mt-8 mb-6">
         <AddPatientDialog onAddPatient={handleAddPatient} />
