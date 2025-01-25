@@ -2,7 +2,8 @@ import { useState } from "react";
 import { AddPatientDialog } from "@/components/AddPatientDialog";
 import { PatientCard } from "@/components/PatientCard";
 import { DashboardStats } from "@/components/Dashboard";
-import { SupervisorTasks } from "@/components/SupervisorTasks";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface Patient {
   id: string;
@@ -16,6 +17,7 @@ interface Patient {
 
 const Index = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
+  const navigate = useNavigate();
 
   const handleAddPatient = (patientData: {
     name: string;
@@ -64,15 +66,18 @@ const Index = () => {
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">Sistema de Gestión de Farmacia</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">Sistema de Gestión de Farmacia</h1>
+        <Button onClick={() => navigate('/supervisor')}>
+          Panel del Supervisor
+        </Button>
+      </div>
       
       <DashboardStats
         totalPatients={patients.length}
         purchasedThisMonth={purchasedThisMonth}
         pendingPurchases={patients.length - purchasedThisMonth}
       />
-
-      <SupervisorTasks />
 
       <div className="mt-8 mb-6">
         <AddPatientDialog onAddPatient={handleAddPatient} />
