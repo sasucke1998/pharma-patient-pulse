@@ -67,7 +67,7 @@ const Index = () => {
   return (
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Sistema de Gestión de Farmacia</h1>
+        <h1 className="text-3xl font-bold">Gestión de Clientes</h1>
         <Button onClick={() => navigate('/')}>
           Panel del Supervisor
         </Button>
