@@ -15,8 +15,8 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/supervisor" element={<SupervisorTasksPage />} />
+          <Route path="/" element={<SupervisorTasksPage />} />
+          <Route path="/pharmacy" element={<Index />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>
