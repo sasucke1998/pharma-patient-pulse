@@ -10,7 +10,7 @@ const SupervisorTasksPage = () => {
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-3xl font-bold">Panel del Supervisor</h1>
         <Button onClick={() => navigate('/pharmacy')}>
-          Sistema de Farmacia
+          Gestión de Clientes
         </Button>
       </div>
       <SupervisorTasks />
