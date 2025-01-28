@@ -22,6 +22,13 @@ export function SupervisorTasks() {
         >
           Gestión de Empleados
         </Button>
+        <Button 
+          variant="outline" 
+          className="h-32 text-lg"
+          onClick={() => navigate('/tasks')}
+        >
+          Tareas del Supervisor
+        </Button>
       </div>
     </div>
   );
